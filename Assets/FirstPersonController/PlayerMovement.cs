@@ -12,12 +12,12 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
-    private bool isGrounded;
+    public bool isGrounded;
 
     public float jumpHeight = 2f;
     private float jumpForce;
-    private string jumpDirection;
     private Vector3 velocity;
+    private Vector3 jumpDirection; 
 
     // Start is called before the first frame update
     void Start()
@@ -38,17 +38,17 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded && velocity.y < 0) {
             velocity.y = -2f;
             if (absInputX > absInputZ) {
-                jumpDirection = "x";
                 jumpForce = InputX;
+                jumpDirection = transform.right;
             } else {
-                jumpDirection = "z";
                 jumpForce = InputZ;
+                jumpDirection = transform.forward;
             } 
         } 
 
         if (!isGrounded) {
             // Player is floating
-            move = jumpDirection == "x" ? (transform.right * jumpForce) : (transform.forward * jumpForce);
+            move = jumpDirection * jumpForce;
         } else {
             move = transform.right * InputX + transform.forward * InputZ;
         }
