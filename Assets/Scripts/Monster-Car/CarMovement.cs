@@ -45,14 +45,14 @@ public class CarMovement : MonoBehaviour
     void Start()
     {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        agent.speed = Mathf.Clamp(agent.speed, 0, motorForce);
+        // agent.speed = Mathf.Clamp(agent.speed, 0, motorForce);
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass += centerOfMassOffset;
     }
 
     private void Update()
     {
-        agent.speed = Mathf.Clamp(agent.speed, 0, motorForce);
+        // agent.speed = Mathf.Clamp(agent.speed, 0, motorForce);
         agent.SetDestination(target.position);
     }
 
