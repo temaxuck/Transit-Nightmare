@@ -11,14 +11,12 @@ public class CarMovement : MonoBehaviour
 
     [SerializeField]
     private Vector3 centerOfMassOffset;
-
     private Rigidbody rb;
     #endregion
 
     #region "Car controller varibles"
     [SerializeField]
     private Transform target;
-
     private UnityEngine.AI.NavMeshAgent agent;
     #endregion
 
@@ -35,33 +33,37 @@ public class CarMovement : MonoBehaviour
     private float motorForce;
 
     [SerializeField]
-    private float breakForce;
+    private float brakeForce;
 
     [SerializeField]
     private float maxSteerAngle;
     #endregion
 
+
+    public bool isBraking = false;
+
     void Start()
     {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        agent.speed = motorForce;
+        agent.speed = Mathf.Clamp(agent.speed, 0, motorForce);
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass += centerOfMassOffset;
     }
 
     private void Update()
     {
+        agent.speed = Mathf.Clamp(agent.speed, 0, motorForce);
         agent.SetDestination(target.position);
     }
 
     private void FixedUpdate()
     {
         HandleSteering();
-        ApplyMotorForce();
+        HandleMotor();
         UpdateWheels();
     }
 
-    private void ApplyMotorForce()
+    private void HandleMotor()
     {
         // Calculate desired motor torque based on NavMeshAgent's desired velocity
         float desiredSpeed = agent.desiredVelocity.magnitude;
@@ -69,10 +71,65 @@ public class CarMovement : MonoBehaviour
         float motorTorque = acceleration * rb.mass;
         currentSpeed = desiredSpeed;
 
-        // The car is front wheels driven so apply motorForce only on front wheels
-        for (int i = 0; i < 2; i++)
+        Vector3 agentDirection = agent.desiredVelocity.normalized;
+        float carAgentAngle = Vector3.Angle(transform.forward, agentDirection);
+
+        // Stop and rotate towards target if angle is greater than maxSteerAngle
+        if (carAgentAngle > maxSteerAngle)
         {
-            wheelColliders[i].motorTorque = motorTorque;
+            ApplyBraking();
+
+            // Rotate towards target
+            float turnDirection = Vector3.Cross(transform.forward, agentDirection).y;
+            rb.AddTorque(0, turnDirection * motorForce * Time.deltaTime, 0);
+        }
+        else
+        {
+            StopBraking();
+            ApplyMotorForce(motorTorque);
+        }
+    }
+
+    private void ApplyMotorForce(float motorTorque)
+    {
+        if (!isBraking)
+        {
+            // The car is front wheels driven so apply motorForce only on front wheels
+            for (int i = 0; i < 2; i++)
+            {
+                wheelColliders[i].motorTorque = motorTorque;
+            }
+        }
+    }
+
+    private void ApplyBraking()
+    {
+        isBraking = true;
+
+        if (rb.velocity.magnitude < 1)
+            isBraking = false;
+
+        if (isBraking)
+        {
+            for (int i = 0; i < wheelColliders.Length; i++)
+            {
+                wheelColliders[i].brakeTorque = brakeForce;
+            }
+
+            Vector3 brakingForce = -rb.velocity.normalized * brakeForce;
+
+            // Apply braking force
+            rb.AddForce(brakingForce);
+        }
+    }
+
+    private void StopBraking()
+    {
+        isBraking = false;
+
+        for (int i = 0; i < wheelColliders.Length; i++)
+        {
+            wheelColliders[i].brakeTorque = 0;
         }
     }
 
