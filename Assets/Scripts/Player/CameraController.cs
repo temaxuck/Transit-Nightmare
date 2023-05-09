@@ -20,6 +20,8 @@ public class CameraController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         cam = this.GetComponent<Camera>();
         rotAroundX = transform.eulerAngles.x;
         rotAroundY = transform.eulerAngles.y;
