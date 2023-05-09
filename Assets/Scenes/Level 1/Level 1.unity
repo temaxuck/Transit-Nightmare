@@ -17355,6 +17355,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2123236018399869351, guid: 6781266f63b74154eb04d4f2ff1a3416, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2123236018399869351, guid: 6781266f63b74154eb04d4f2ff1a3416, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2176387350347310143, guid: 6781266f63b74154eb04d4f2ff1a3416, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -17399,9 +17407,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5836861423371382394, guid: 6781266f63b74154eb04d4f2ff1a3416, type: 3}
+      propertyPath: m_Drag
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7903713209898017819, guid: 6781266f63b74154eb04d4f2ff1a3416, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8988605204233867775, guid: 6781266f63b74154eb04d4f2ff1a3416, type: 3}
+      propertyPath: fallRate
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8988605204233867775, guid: 6781266f63b74154eb04d4f2ff1a3416, type: 3}
+      propertyPath: slopLimitEnabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

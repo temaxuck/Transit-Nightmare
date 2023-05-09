@@ -40,6 +40,7 @@ public class FPMovementController : MonoBehaviour
     private CameraHeadBob headBob;
     private Vector3 YAxisGravity;
     private AudioSource audioSource;
+    private bool isCurrentlyColliding;
 
     #region Properties
     public bool IsRunning
@@ -117,6 +118,13 @@ public class FPMovementController : MonoBehaviour
         prevGrounded = IsGrounded();
     }
 
+    void OnCollisionEnter(Collision col) {
+        isCurrentlyColliding = true;
+    }
+ 
+    void OnCollisionExit(Collision col) {
+        isCurrentlyColliding = false;
+    }
     private void FixedUpdate()
     {
         /* When calculating the moveDirection , the Y velocity always stays 0. 
@@ -124,9 +132,10 @@ public class FPMovementController : MonoBehaviour
          To solve this we add to the rb velocity the Y axis velocity */
         
         YAxisGravity = new Vector3(0, rb.velocity.y - fallRate, 0);
+
         if (!isJumping && IsGrounded()) { Move(); }
         
-        if (!IsGrounded()) 
+        if (!IsGrounded() && !isCurrentlyColliding) 
         {  
             if (!IsRunning)
             {

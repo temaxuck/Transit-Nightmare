@@ -639,7 +639,7 @@ MonoBehaviour:
   jumpingEnabled: 1
   jumpSpeed: 5
   fallRate: 0.25
-  slopLimitEnabled: 1
+  slopLimitEnabled: 0
   slopeLimit: 2
   footstepClip: {fileID: 8300000, guid: 8482dbfb43c3f444cb314626333b49b3, type: 3}
   landingClip: {fileID: 8300000, guid: bedd7c2425ec41847b53f6183b82af59, type: 3}
