@@ -1,153 +1,208 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.AI;
 using System.ComponentModel;
 
 public class CarMovement : MonoBehaviour
 {
-    #region "Car physics variables"
-    private float currentSteerAngle;
-    private float currentSpeed;
-
-    [SerializeField]
-    private Vector3 centerOfMassOffset;
-    private Rigidbody rb;
+    #region Car physics variables
+        private float currentSteerAngle;
+        [SerializeField] private Vector3 centerOfMassOffset;
+        private Rigidbody rb;
     #endregion
 
-    #region "Car controller varibles"
-    [SerializeField]
-    private Transform target;
-    private UnityEngine.AI.NavMeshAgent agent;
+    #region Car controller varibles
+        [SerializeField] private Transform target;
+        [SerializeField] private NavMeshAgent ghostAgent;
+        // [SerializeField] private float angleDetectionDistance = 10f;
+        private float backUpDistance = 100f; // distance to travel back when Entered Collision
+        private bool isBackingUp = false;
+        bool isBraking = false;
+        private Vector3 lastPosition;
+        private float distanceDriven;
+        [SerializeField] private float obstaclesDetectionDistance = 100f;
+        [SerializeField] private LayerMask obstaclesMask;
+
     #endregion
 
-    #region "Wheel objects variables"
-    [SerializeField]
-    private WheelCollider[] wheelColliders; // 0 - Front Left; 1 - Front Right; 2 - Rear Left; 3 - Rear Right;
-
-    [SerializeField]
-    private Transform[] wheelMeshes; // 0 - Front Left; 1 - Front Right; 2 - Rear Left; 3 - Rear Right;
+    #region Wheel objects variables
+        [SerializeField] private WheelCollider[] wheelColliders; // 0 - Front Left; 1 - Front Right; 2 - Rear Left; 3 - Rear Right;
+        [SerializeField] private Transform[] wheelMeshes; // 0 - Front Left; 1 - Front Right; 2 - Rear Left; 3 - Rear Right;
     #endregion
 
-    #region "Car physics parameters"
-    [SerializeField]
-    private float motorForce;
-
-    [SerializeField]
-    private float brakeForce;
-
-    [SerializeField]
-    private float maxSteerAngle;
+    #region Car physics parameters
+        [SerializeField] private float maxMotorForce;
+        [SerializeField] private float brakeForce;
+        [SerializeField] private float maxSteerAngle;
+        [SerializeField] private float maxSpeed;
     #endregion
 
+    #region Car auxiliary variables
+        public bool showGizmos = false;
+    #endregion
 
-    public bool isBraking = false;
-
-    void Start()
+    private void Start()
     {
-        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        // agent.speed = Mathf.Clamp(agent.speed, 0, motorForce);
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass += centerOfMassOffset;
+
+        ghostAgent.speed = maxMotorForce / 60f;
     }
 
     private void Update()
-    {
-        // agent.speed = Mathf.Clamp(agent.speed, 0, motorForce);
-        agent.SetDestination(target.position);
+    {   
+        if (ghostAgent != null)
+            CalculatePath();
+
+        UpdateWheelsPositions();
     }
 
     private void FixedUpdate()
     {
-        HandleSteering();
         HandleMotor();
-        UpdateWheels();
+        HandleSteering();
     }
 
-    private void HandleMotor()
+    private void OnCollisionEnter(Collision other) {
+        // The car is not moving
+        isBackingUp = true;
+    }
+
+    private void CalculatePath()
     {
-        // Calculate desired motor torque based on NavMeshAgent's desired velocity
-        float desiredSpeed = agent.desiredVelocity.magnitude;
-        float acceleration = (desiredSpeed - currentSpeed) / Time.deltaTime;
-        float motorTorque = acceleration * rb.mass;
-        currentSpeed = desiredSpeed;
+        // Stick ghost agent to the car
+        ghostAgent.nextPosition = transform.position;
+        ghostAgent.velocity = rb.velocity;
 
-        Vector3 agentDirection = agent.desiredVelocity.normalized;
-        float carAgentAngle = Vector3.Angle(transform.forward, agentDirection);
+        // Calculate path to the target
+        ghostAgent.SetDestination(target.position);
+    }
 
-        // Stop and rotate towards target if angle is greater than maxSteerAngle
-        if (carAgentAngle > maxSteerAngle)
+    #region Motor
+        private void HandleMotor() 
         {
-            ApplyBraking();
-
-            // Rotate towards target
-            float turnDirection = Vector3.Cross(transform.forward, agentDirection).y;
-            rb.AddTorque(0, turnDirection * motorForce * Time.deltaTime, 0);
-        }
-        else
-        {
+            Debug.Log(isBraking);
             StopBraking();
-            ApplyMotorForce(motorTorque);
+
+            Vector3 desiredVelocity = ghostAgent.desiredVelocity; // Desired velocity by ghost agent
+            Vector3 actualVelocity = rb.velocity;
+
+            if (isBackingUp)
+            {   
+                DriveBack(actualVelocity, desiredVelocity);
+                float distance = Vector3.Distance(transform.position, lastPosition);
+                distanceDriven += distance;
+                Debug.Log(distanceDriven);
+
+                if (distanceDriven < backUpDistance)
+                    return;
+            }
+
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position, transform.forward, out hit, obstaclesDetectionDistance, obstaclesMask) && !isBackingUp)
+            {
+                float speedThreshold = 20f;
+                if (actualVelocity.magnitude < speedThreshold)
+                {
+                    ApplyBraking(50000f);
+                    isBackingUp = true;
+                }
+                return ;
+            }
+
+            isBackingUp = false;
+            distanceDriven = 0f;
+
+            DriveForward(actualVelocity, desiredVelocity);
+            
+            lastPosition = transform.position;
+        }
+
+        private void DriveForward(Vector3 actualVelocity, Vector3 desiredVelocity)
+        {
+            float motorTorque = maxMotorForce;
+            float velocityProduct = Vector3.Dot(desiredVelocity, actualVelocity);
+
+            if (actualVelocity.magnitude > desiredVelocity.magnitude && velocityProduct < 0f)
+            {
+                motorTorque = desiredVelocity.magnitude * 60f;    
+                // Applying half of brakeForce, because this is not the extreme braking
+                ApplyBraking(brakeForce / 2); 
+            }
+            
+            if (actualVelocity.magnitude <= maxSpeed)
+                ApplyMotorForce(motorTorque);
+        }
+
+        private void DriveBack(Vector3 actualVelocity, Vector3 desiredVelocity)
+        {
+            float motorTorque = -maxMotorForce;
+
+            if (actualVelocity.magnitude <= maxSpeed)
+                ApplyMotorForce(motorTorque);
+        }
+
+        private void ApplyMotorForce(float motorTorque) 
+    {
+        // The car is front wheels driven so apply motorTorque only on first 2 wheels
+        for (int i = 0; i < 2; i++)
+        {
+            wheelColliders[i].motorTorque = motorTorque;
         }
     }
+    #endregion
 
-    private void ApplyMotorForce(float motorTorque)
-    {
-        if (!isBraking)
+    #region Steering
+        private void HandleSteering() 
         {
-            // The car is front wheels driven so apply motorForce only on front wheels
+            float steerAngle;
+            if (ghostAgent.path.corners.Length > 1 && !isBackingUp) {
+                Vector3 wayPoint = ghostAgent.path.corners[1];
+                Vector3 targetDirection = wayPoint - transform.position;
+                float carTargetAngle = Vector3.SignedAngle(transform.forward, targetDirection, Vector3.up);
+
+                steerAngle = Mathf.Clamp(carTargetAngle, -maxSteerAngle, maxSteerAngle);
+            }
+            else 
+            {
+                steerAngle = 0;
+            }
+            
+            ApplySteering(steerAngle);
+        }
+
+        private void ApplySteering(float steerAngle) 
+        {
+            // Apply steering only on front wheels
             for (int i = 0; i < 2; i++)
             {
-                wheelColliders[i].motorTorque = motorTorque;
+                wheelColliders[i].steerAngle = steerAngle;
             }
         }
-    }
+    #endregion
 
-    private void ApplyBraking()
-    {
-        isBraking = true;
-
-        if (rb.velocity.magnitude < 1)
-            isBraking = false;
-
-        if (isBraking)
+    #region Braking
+        private void ApplyBraking(float brakeForce) 
         {
+            isBraking = true;
+            
             for (int i = 0; i < wheelColliders.Length; i++)
             {
                 wheelColliders[i].brakeTorque = brakeForce;
             }
 
-            Vector3 brakingForce = -rb.velocity.normalized * brakeForce;
-
-            // Apply braking force
-            rb.AddForce(brakingForce);
         }
-    }
-
-    private void StopBraking()
-    {
-        isBraking = false;
-
-        for (int i = 0; i < wheelColliders.Length; i++)
+        private void StopBraking() 
         {
-            wheelColliders[i].brakeTorque = 0;
+            ApplyBraking(0);
+            isBraking = false;
         }
-    }
+    #endregion
 
-    private void HandleSteering()
-    {
-        // Calculate desired steering angle based on NavMeshAgent's desired velocity
-        Vector3 relativeVelocity = transform.InverseTransformDirection(agent.desiredVelocity);
-        float steerDirection = relativeVelocity.x / relativeVelocity.magnitude;
-        currentSteerAngle = steerDirection * maxSteerAngle;
-
-        // Set steering angle for front wheels
-        for (int i = 0; i < 2; i++)
-        {
-            wheelColliders[i].steerAngle = currentSteerAngle;
-        }
-    }
-
-    private void UpdateWheels()
+    private void UpdateWheelsPositions()
     {
         for (int i = 0; i < wheelColliders.Length; i++)
         {
@@ -160,6 +215,28 @@ public class CarMovement : MonoBehaviour
             // Set the wheel mesh's position and rotation
             wheelMesh.transform.position = wheelPosition;
             wheelMesh.transform.rotation = wheelRotation;
+        }
+    }
+
+    private void OnDrawGizmosSelected() 
+    {
+        if (!showGizmos)
+            return ;
+
+        try
+        {
+            Gizmos.color = Color.yellow;
+            for (int i = 0; i < ghostAgent.path.corners.Length; i++)
+            {
+                Gizmos.DrawSphere(ghostAgent.path.corners[i], 0.5f);
+            }
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(lastPosition, 3f);
+        }
+        catch (Exception)
+        {
+            // ...
         }
     }
 }
