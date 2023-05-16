@@ -73,6 +73,11 @@ public class CarController : MonoBehaviour
         target = newTarget;
     }
 
+    public Transform GetTarget()
+    {
+        return target;
+    }
+
     private void CalculatePath()
     {
         // Stick ghost agent to the car
