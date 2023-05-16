@@ -58,6 +58,7 @@ public class CarDamage : MonoBehaviour
         }
 
         GameObject newCar = Instantiate(nextDamageStatePrefab, carPosition, carRotation);
+        newCar.GetComponent<CarController>().SetTarget(carController.GetTarget());
         newCar.transform.parent = transform.parent;
         Destroy(gameObject);
     }
