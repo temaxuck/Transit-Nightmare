@@ -14,19 +14,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3260195932206828364, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3260195932206828364, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 18.828766
       objectReference: {fileID: 0}
     - target: {fileID: 3260195932206828364, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.37
+      value: -0.0000038146973
       objectReference: {fileID: 0}
     - target: {fileID: 3260195932206828364, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -51.388336
       objectReference: {fileID: 0}
     - target: {fileID: 3260195932206828364, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -57,7 +57,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8552198856406046761, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2136740840462127288, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
@@ -81,5 +82,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3b81c9ad9d827a41a8efb8e0c097e32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints: 4
+  maxHitPoints: 4
   damageTriggerTag: Damage Trigger
+  nextDamageStatePrefab: {fileID: 0}
