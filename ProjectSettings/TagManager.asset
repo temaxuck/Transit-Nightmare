@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Item
+  - Monster Car
   layers:
   - Default
   - TransparentFX

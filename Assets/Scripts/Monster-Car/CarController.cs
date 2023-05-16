@@ -77,7 +77,11 @@ public class CarController : MonoBehaviour
     {
         return target;
     }
-
+    
+    public float GetCurrentSpeed()
+    {
+        return (transform.position - lastPosition).magnitude / Time.deltaTime;
+    }
     private void CalculatePath()
     {
         // Stick ghost agent to the car

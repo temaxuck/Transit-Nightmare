@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarDamage : MonoBehaviour
+public class CarDamage : MonoBehaviour, IDamageTaker
 {
     // Literally how many hits can car get. Might be changed to relative system in %
     [SerializeField] private int maxHitPoints = 4; 
-    [SerializeField] private string damageTriggerTag = "Damage Trigger";
     [SerializeField] private GameObject nextDamageStatePrefab; 
     private static int currentHitPoints;
     private static bool isInitialized = false;
@@ -32,15 +31,23 @@ public class CarDamage : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision) {
         GameObject collisionObject = collision.gameObject;
-        if (collisionObject.CompareTag(damageTriggerTag))
+        IDamageTaker collisionDamageTaker = collisionObject.GetComponent<IDamageTaker>();
+        
+        float speedThreshold = 3;
+
+        if (collisionDamageTaker != null && carController.GetCurrentSpeed() >= speedThreshold)
         {
-            collisionObject.SetActive(false);
-            Destroy(collisionObject);
+            collisionDamageTaker.TakeDamage();
             TakeDamage();
         }
     }
 
-    private void TakeDamage()
+    public bool isActive()
+    {
+        return true;
+    }
+
+    public void TakeDamage()
     {
         currentHitPoints -= 1;
         SpawnNextDamageStateCar();
