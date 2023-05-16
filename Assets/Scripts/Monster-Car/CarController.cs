@@ -68,6 +68,11 @@ public class CarController : MonoBehaviour
         isBackingUp = true;
     }
 
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+    }
+
     private void CalculatePath()
     {
         // Stick ghost agent to the car

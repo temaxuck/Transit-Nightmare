@@ -5,42 +5,72 @@ using UnityEngine;
 public class CarDamage : MonoBehaviour
 {
     // Literally how many hits can car get. Might be changed to relative system in %
-    [SerializeField] private int hitPoints = 4; 
+    [SerializeField] private int maxHitPoints = 4; 
     [SerializeField] private string damageTriggerTag = "Damage Trigger";
+    [SerializeField] private GameObject nextDamageStatePrefab; 
+    private static int currentHitPoints;
+    private static bool isInitialized = false;
+    private CarController carController;
+    
+    private void Awake() {
+        if (!isInitialized) {
+            currentHitPoints = maxHitPoints;
+            isInitialized = true;
+        }
+    }
+
+    private void Start() {
+        carController = GetComponent<CarController>();
+    }
 
     private void Update() {
-        if (hitPoints < 1) 
+        Debug.Log(currentHitPoints);
+        if (currentHitPoints < 1) 
             Destroy(gameObject);
     }
+
 
     private void OnCollisionEnter(Collision collision) {
         GameObject collisionObject = collision.gameObject;
         if (collisionObject.CompareTag(damageTriggerTag))
         {
+            collisionObject.SetActive(false);
             Destroy(collisionObject);
-            hitPoints -= 1;
+            TakeDamage();
         }
     }
 
-    // Start is called before the first frame update
-    // void Start()
-    // {
-        
-    // }
+    private void TakeDamage()
+    {
+        currentHitPoints -= 1;
+        SpawnNextDamageStateCar();
+    }
 
-    // // Update is called once per frame
-    // void Update()
-    // {
-        
-    // }
+    private void SpawnNextDamageStateCar()
+    {
+        Vector3 carPosition = transform.position;
+        Quaternion carRotation = transform.rotation;
+
+        if (nextDamageStatePrefab == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        GameObject newCar = Instantiate(nextDamageStatePrefab, carPosition, carRotation);
+        newCar.transform.parent = transform.parent;
+        Destroy(gameObject);
+    }
 
     // private void OnDrawGizmosSelected() {
     //     try
     //     {
-    //         foreach (ContactPoint contact in _collision) {
-    //             Gizmos.color = Color.yellow;
-    //             Gizmos.DrawRay(contact.point, contact.normal);
-    //         }
+    //         // Gizmos.color = Color.yellow;
+    //         // Gizmos.DrawSphere(newTarget.transform.position, 1f);
+    //         // foreach (ContactPoint contact in _collision) {
+    //         //     Gizmos.DrawRay(contact.point, contact.normal);
+    //         // }
+
     //     }
     //     catch (System.Exception) {}
     // }
