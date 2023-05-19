@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GasBalloon : MonoBehaviour, IDamageTaker
+public class Explosive : MonoBehaviour, IDamageTaker
 {
     [SerializeField] private float explosionForce = 1000000f;
     [SerializeField] private float explosionRadius = 500000f;
