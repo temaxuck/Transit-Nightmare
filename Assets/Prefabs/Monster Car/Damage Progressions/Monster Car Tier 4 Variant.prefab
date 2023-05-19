@@ -18,15 +18,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3260195932206828364, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 18.828766
+      value: 49.87761
       objectReference: {fileID: 0}
     - target: {fileID: 3260195932206828364, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0000038146973
+      value: 0.16599092
       objectReference: {fileID: 0}
     - target: {fileID: 3260195932206828364, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -51.388336
+      value: -22.628778
       objectReference: {fileID: 0}
     - target: {fileID: 3260195932206828364, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -82,6 +82,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3b81c9ad9d827a41a8efb8e0c097e32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHitPoints: 4
-  damageTriggerTag: Damage Trigger
-  nextDamageStatePrefab: {fileID: 0}
+  maxHitPoints: 1
+  nextDamageStatePrefab: {fileID: 5714055099232106887, guid: fe86b5d84e31b074b98e2e490f7834b5, type: 3}
+  debreeProps:
+  - {fileID: 6421301610953143912, guid: 7f9145224d7d1244aa4a13745fe1a410, type: 3}
+  - {fileID: 6421301610953143912, guid: 7f9145224d7d1244aa4a13745fe1a410, type: 3}
+  - {fileID: 6421301610953143912, guid: 7f9145224d7d1244aa4a13745fe1a410, type: 3}
+  - {fileID: 6421301610953143912, guid: 7f9145224d7d1244aa4a13745fe1a410, type: 3}
