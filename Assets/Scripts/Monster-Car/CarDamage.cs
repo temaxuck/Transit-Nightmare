@@ -84,7 +84,6 @@ public class CarDamage : MonoBehaviour, IDamageTaker
         
         foreach (GameObject debreeProp in debreeProps)
         {
-            Debug.Log(debreeProp);
             Vector3 randomPosition = new Vector3 (Random.Range(-10.0f, 10.0f), 2f, Random.Range(-10.0f, 10.0f));
             GameObject debreeItem = Instantiate(debreeProp, carPosition + randomPosition, carRotation);
         }
