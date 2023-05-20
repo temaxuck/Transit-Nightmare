@@ -1,7 +1,8 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour {
-    [SerializeField] private TextButton[] buttons;
+    [SerializeField] private Button[] buttons;
     public int focusedButtonIndex = 0;
 
     void Update() {
@@ -16,12 +17,12 @@ public class ButtonController : MonoBehaviour {
     }
 
     private void ChangeFocus(int direction) {
-        buttons[focusedButtonIndex].OnPointerExit(null);
+        buttons[focusedButtonIndex].OnDeselect(null);
         focusedButtonIndex = (focusedButtonIndex + direction + buttons.Length) % buttons.Length;
-        buttons[focusedButtonIndex].OnPointerEnter(null);
+        buttons[focusedButtonIndex].Select();
     }
 
     private void ActivateButton() {
-        buttons[focusedButtonIndex].OnPointerClick(null);
+        buttons[focusedButtonIndex].onClick.Invoke();
     }
 }
