@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 811486684496256529, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
+      propertyPath: obstaclesMask.m_Bits
+      value: 4087
+      objectReference: {fileID: 0}
     - target: {fileID: 2136740840462127288, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_Name
       value: Monster Car Tier 4 Variant
@@ -89,3 +93,4 @@ MonoBehaviour:
   - {fileID: 6421301610953143912, guid: 7f9145224d7d1244aa4a13745fe1a410, type: 3}
   - {fileID: 6421301610953143912, guid: 7f9145224d7d1244aa4a13745fe1a410, type: 3}
   - {fileID: 6421301610953143912, guid: 7f9145224d7d1244aa4a13745fe1a410, type: 3}
+  minimumSpeedCollision: 3

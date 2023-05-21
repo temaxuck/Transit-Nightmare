@@ -74,6 +74,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 811486684496256529, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
+      propertyPath: obstaclesMask.m_Bits
+      value: 4087
+      objectReference: {fileID: 0}
     - target: {fileID: 1696286200735827670, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.422
@@ -211,3 +215,4 @@ MonoBehaviour:
   - {fileID: 3216822810474977351, guid: 0cef8f5cf5981444c8ba3852aed7adb7, type: 3}
   - {fileID: 5580054182671689128, guid: 21f9196ac6c020245918b6280f289ef3, type: 3}
   - {fileID: 3066125066800645968, guid: 72d2613a14118cc43ae5040f60dc55bb, type: 3}
+  minimumSpeedCollision: 3

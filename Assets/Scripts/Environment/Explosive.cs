@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Explosive : MonoBehaviour, IDamageTaker
 {
-    [SerializeField] private float explosionForce = 1000000f;
-    [SerializeField] private float explosionRadius = 500000f;
+    [SerializeField] private float explosionForce = 100f;
+    [SerializeField] private float explosionRadius = 5f;
+    [SerializeField] private GameObject damagedPrefab;
+
 
     public bool _isActive = true; 
     
-    private void OnCollisionEnter(Collision collision) {
-        TakeDamage();
-    }
-
     public bool isActive()
     {
         return _isActive;
@@ -23,13 +21,13 @@ public class Explosive : MonoBehaviour, IDamageTaker
         if (_isActive)
         {
             Explode();
+            ReplacePrefab();
             _isActive = false;
         }
         // gameObject.SetActive(false);
         // Destroy(gameObject);
     }
 
-    Vector3 spherePosition;
     private void Explode()
     {
         Vector3 explosionPosition = transform.position;
@@ -37,10 +35,22 @@ public class Explosive : MonoBehaviour, IDamageTaker
         foreach (Collider hit in colliders) 
         {
             Rigidbody hit_rb = hit.GetComponent<Rigidbody>();
-            if (hit_rb != null) 
+            if (hit_rb != null && !hit.gameObject.CompareTag("Player")) 
             {
+                Debug.Log(hit_rb.gameObject);
                 hit_rb.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
             }
+        }
+    }
+
+    private void ReplacePrefab()
+    {
+        if (damagedPrefab != null)
+        {
+            GameObject damagedObject = Instantiate(damagedPrefab, transform.position, transform.rotation);
+            gameObject.SetActive(false);
+            Destroy(gameObject);   
+
         }
     }
 
