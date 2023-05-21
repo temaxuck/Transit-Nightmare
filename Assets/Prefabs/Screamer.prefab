@@ -32,7 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2364382264256720424
 BoxCollider:
@@ -70,8 +70,8 @@ MonoBehaviour:
   pictureOrModel: {fileID: 0}
   soundClip: {fileID: 8300000, guid: ee73af505064a00468ab3cb4a3ed5e13, type: 3}
   roomLight: {fileID: 0}
-  modelDistanceBehindPlayer: 6
-  delayOfDisappearance: 2
+  modelDistanceBehindPlayer: 5
+  delayOfDisappearance: 10
   blinkDuration: 0.5
   numBlinks: 3
 --- !u!82 &2500337071573571832
