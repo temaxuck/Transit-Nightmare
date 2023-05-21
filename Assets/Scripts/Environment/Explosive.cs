@@ -7,9 +7,16 @@ public class Explosive : MonoBehaviour, IDamageTaker
     [SerializeField] private float explosionForce = 100f;
     [SerializeField] private float explosionRadius = 5f;
     [SerializeField] private GameObject damagedPrefab;
-
-
+    [SerializeField] private AudioClip explosionSound;
+    [SerializeField] private AudioSource audioSource;
+    private GameObject parent;
     public bool _isActive = true; 
+
+    private void Start() {
+        parent = transform.parent.gameObject;
+
+        audioSource.clip = explosionSound;
+    }
     
     public bool isActive()
     {
@@ -32,15 +39,18 @@ public class Explosive : MonoBehaviour, IDamageTaker
     {
         Vector3 explosionPosition = transform.position;
         Collider[] colliders = Physics.OverlapSphere(explosionPosition, explosionRadius);
+        
+        audioSource.Play();
+        
         foreach (Collider hit in colliders) 
         {
             Rigidbody hit_rb = hit.GetComponent<Rigidbody>();
             if (hit_rb != null && !hit.gameObject.CompareTag("Player")) 
             {
-                Debug.Log(hit_rb.gameObject);
                 hit_rb.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
             }
         }
+        
     }
 
     private void ReplacePrefab()
@@ -49,8 +59,8 @@ public class Explosive : MonoBehaviour, IDamageTaker
         {
             GameObject damagedObject = Instantiate(damagedPrefab, transform.position, transform.rotation);
             gameObject.SetActive(false);
+            damagedObject.transform.SetParent(parent.transform);
             Destroy(gameObject);   
-
         }
     }
 
