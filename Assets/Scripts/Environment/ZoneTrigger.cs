@@ -6,16 +6,16 @@ public class ZoneTrigger : MonoBehaviour
 {
     [SerializeField] private GameObject pictureOrModel; // Drag and drop your 3D model or Picture(prefab with sprite renderer) in the inspector.
     [SerializeField] private AudioClip soundClip; // Drag and drop your sound clip in the inspector.
-    [SerializeField] private Light roomLight;
+    [SerializeField] private Light[] roomLight;
     [SerializeField] private float modelDistanceBehindPlayer = 10.0f;
     [SerializeField] private float delayOfDisappearance = 2.0f;
+    [SerializeField] private float displayDuration = 15f; // duration that the picture or 3d model is visible, change according to your needs.
     [SerializeField] private float blinkDuration = 0.25f;
     [SerializeField] private int numBlinks = 3;
 
     private AudioSource audioSource;
     private bool isTriggered;
     private bool playerScream = false;
-    private float displayDuration = 15f; // duration that the picture or 3d model is visible, change according to your needs.
     private Transform playerTransform;
 
     private void Start()
@@ -33,12 +33,9 @@ public class ZoneTrigger : MonoBehaviour
             bool modelInSight = CheckModelInSight();
             if (modelInSight)
             {
-                pictureOrModel.SetActive(false);
-                roomLight.enabled = true;
                 playerScream = false;
                 StopCoroutine(DisplayModelRoutine());
                 StartCoroutine(PlayerSawDelayRoutine());
-                StartCoroutine(BlinkAndEnableLight());
             }
             
         }
@@ -51,7 +48,10 @@ public class ZoneTrigger : MonoBehaviour
             playerTransform = other.transform;
             Vector3 modelPosition = playerTransform.position - playerTransform.forward * modelDistanceBehindPlayer;
             pictureOrModel.transform.position = modelPosition;
-            roomLight.enabled = false;
+            foreach (var light in roomLight)
+            {
+                light.enabled = false;
+            }
             pictureOrModel.SetActive(true); // Make the picture or model visible.
             audioSource.Play(); // Play the sound.
             StartCoroutine(DisplayModelRoutine());
@@ -76,6 +76,7 @@ public class ZoneTrigger : MonoBehaviour
         yield return new WaitForSeconds(displayDuration);
 
         pictureOrModel.SetActive(false); // Hide the picture or model after the desired time has passed.
+        StartCoroutine(BlinkAndEnableLight());
         
     }
 
@@ -84,16 +85,23 @@ public class ZoneTrigger : MonoBehaviour
         yield return new WaitForSeconds(delayOfDisappearance);
 
         pictureOrModel.SetActive(false); // Hide the picture or model after the desired time has passed.
+        StartCoroutine(BlinkAndEnableLight());
     }
 
     private IEnumerator BlinkAndEnableLight()
     {
         for (int i = 0; i < numBlinks; i++)
         {
-            roomLight.enabled = !roomLight.enabled;
+            foreach (var light in roomLight)
+            {
+                light.enabled = !light.enabled;
+            }
             yield return new WaitForSeconds(blinkDuration);
         }
 
-        roomLight.enabled = true;
+        foreach (var light in roomLight)
+        {
+            light.enabled = true;
+        }
     }
 }
