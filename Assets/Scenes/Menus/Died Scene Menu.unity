@@ -336,9 +336,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'End of the demo
-
-    Thanks for playing'
+  m_text: You died
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 71ce04b4f5470f5438210e039fc33a00, type: 2}
   m_sharedMaterial: {fileID: 1633517574000291049, guid: 71ce04b4f5470f5438210e039fc33a00, type: 2}
@@ -1085,7 +1083,7 @@ GameObject:
   - component: {fileID: 1489162850}
   - component: {fileID: 1489162854}
   m_Layer: 5
-  m_Name: Final Scene Menu
+  m_Name: Died Scene Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
