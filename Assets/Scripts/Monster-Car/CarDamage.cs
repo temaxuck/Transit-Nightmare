@@ -7,6 +7,9 @@ public class CarDamage : MonoBehaviour, IDamageTaker
     // Literally how many hits can car get. Might be changed to relative system in %
     [SerializeField] private int maxHitPoints = 4; 
     [SerializeField] private GameObject nextDamageStatePrefab; 
+    [SerializeField] private GameObject[] debreeProps; 
+    [SerializeField] private float minimumSpeedCollision = 3f;
+
     private static int currentHitPoints;
     private static bool isInitialized = false;
     private CarController carController;
@@ -23,7 +26,6 @@ public class CarDamage : MonoBehaviour, IDamageTaker
     }
 
     private void Update() {
-        Debug.Log(currentHitPoints);
         if (currentHitPoints < 1) 
             Destroy(gameObject);
     }
@@ -32,13 +34,15 @@ public class CarDamage : MonoBehaviour, IDamageTaker
     private void OnCollisionEnter(Collision collision) {
         GameObject collisionObject = collision.gameObject;
         IDamageTaker collisionDamageTaker = collisionObject.GetComponent<IDamageTaker>();
-        
-        float speedThreshold = 3;
 
-        if (collisionDamageTaker != null && carController.GetCurrentSpeed() >= speedThreshold)
+        if (collisionDamageTaker != null && carController.GetCurrentSpeed() >= minimumSpeedCollision)
         {
-            collisionDamageTaker.TakeDamage();
-            TakeDamage();
+            if (collisionDamageTaker.isActive())
+            {
+                TakeDamage();
+                collisionDamageTaker.TakeDamage();
+            }
+
         }
     }
 
@@ -51,6 +55,7 @@ public class CarDamage : MonoBehaviour, IDamageTaker
     {
         currentHitPoints -= 1;
         SpawnNextDamageStateCar();
+        SpawnDebreeProps();
     }
 
     private void SpawnNextDamageStateCar()
@@ -65,9 +70,23 @@ public class CarDamage : MonoBehaviour, IDamageTaker
         }
 
         GameObject newCar = Instantiate(nextDamageStatePrefab, carPosition, carRotation);
-        newCar.GetComponent<CarController>().SetTarget(carController.GetTarget());
+        CarController newCarController = newCar.GetComponent<CarController>();
+        if (newCarController != null)
+            newCarController.SetTarget(carController.GetTarget());
         newCar.transform.parent = transform.parent;
         Destroy(gameObject);
+    }
+
+    private void SpawnDebreeProps()
+    {
+        Vector3 carPosition = transform.position;
+        Quaternion carRotation = transform.rotation;
+        
+        foreach (GameObject debreeProp in debreeProps)
+        {
+            Vector3 randomPosition = new Vector3 (Random.Range(-10.0f, 10.0f), 2f, Random.Range(-10.0f, 10.0f));
+            GameObject debreeItem = Instantiate(debreeProp, carPosition + randomPosition, carRotation);
+        }
     }
 
     // private void OnDrawGizmosSelected() {
