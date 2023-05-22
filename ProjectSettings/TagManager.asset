@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Item
   - Monster Car
+  - Key
   layers:
   - Default
   - TransparentFX
