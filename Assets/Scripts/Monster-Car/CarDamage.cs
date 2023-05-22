@@ -8,6 +8,7 @@ public class CarDamage : MonoBehaviour, IDamageTaker
     [SerializeField] private int maxHitPoints = 4; 
     [SerializeField] private GameObject nextDamageStatePrefab; 
     [SerializeField] private GameObject[] debreeProps; 
+    [SerializeField] private float minimumSpeedCollision = 3f;
 
     private static int currentHitPoints;
     private static bool isInitialized = false;
@@ -25,7 +26,6 @@ public class CarDamage : MonoBehaviour, IDamageTaker
     }
 
     private void Update() {
-        Debug.Log(currentHitPoints);
         if (currentHitPoints < 1) 
             Destroy(gameObject);
     }
@@ -34,15 +34,15 @@ public class CarDamage : MonoBehaviour, IDamageTaker
     private void OnCollisionEnter(Collision collision) {
         GameObject collisionObject = collision.gameObject;
         IDamageTaker collisionDamageTaker = collisionObject.GetComponent<IDamageTaker>();
-        
-        float speedThreshold = 3;
 
-        if (collisionDamageTaker != null && carController.GetCurrentSpeed() >= speedThreshold)
+        if (collisionDamageTaker != null && carController.GetCurrentSpeed() >= minimumSpeedCollision)
         {
             if (collisionDamageTaker.isActive())
+            {
                 TakeDamage();
+                collisionDamageTaker.TakeDamage();
+            }
 
-            collisionDamageTaker.TakeDamage();
         }
     }
 

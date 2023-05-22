@@ -7,6 +7,8 @@ TagManager:
   - Item
   - Monster Car
   - Key
+  - Damage Trigger
+
   layers:
   - Default
   - TransparentFX
@@ -20,7 +22,7 @@ TagManager:
   - Inside
   - Shared
   - Modifier
-  - 
+  - NonObstacle
   - 
   - 
   - 
