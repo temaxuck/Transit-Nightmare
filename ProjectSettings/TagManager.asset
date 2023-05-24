@@ -6,7 +6,9 @@ TagManager:
   tags:
   - Item
   - Monster Car
+  - Key
   - Damage Trigger
+
   layers:
   - Default
   - TransparentFX
