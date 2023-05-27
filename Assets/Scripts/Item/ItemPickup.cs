@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemPickup : MonoBehaviour
 {
     public GameObject pickupIcon;
-    public string itemName;
+    public string itemName = "Key";
 
     private void Start()
     {
@@ -21,7 +21,13 @@ public class ItemPickup : MonoBehaviour
     public void PickUpItem()
     {
         // Add your logic for picking up the item, e.g., adding it to the player's inventory
-        Debug.Log($"Picked up: {itemName}");
-        Destroy(gameObject);
+        if (gameObject.CompareTag(itemName))
+        {
+            // Add the key to the player's inventory.
+            KeyInventory.instance.AddKey(gameObject);
+            Debug.Log($"Picked up: {itemName}");
+            // Destroy the key object.
+            Destroy(gameObject);
+        }
     }
 }
