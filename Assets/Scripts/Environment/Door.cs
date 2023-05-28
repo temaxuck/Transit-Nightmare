@@ -15,12 +15,13 @@ public class Door : MonoBehaviour
 
     public void SetIconVisibility(bool isVisible)
     {
-        pickupIcon.SetActive(isVisible);
+        if (!isOpen) 
+            pickupIcon.SetActive(isVisible);
     }
 
     private bool CheckKey()
     {
-        return KeyInventory.instance.HasKey(doorKey);
+        return (doorKey == null) ? true : KeyInventory.instance.HasKey(doorKey);
     }
 
     public void OpenDoor()
@@ -30,6 +31,5 @@ public class Door : MonoBehaviour
             isOpen = true;
             animator.SetTrigger("Open");
         }
-        
     }
 }
