@@ -8,7 +8,8 @@ public class DeathCollider : MonoBehaviour
 
         if (colliderObject.CompareTag("Player"))
         {
-            Debug.LogFormat("Die {0} biiaatch..!", colliderObject);
+            FPMovementController playerController = colliderObject.GetComponent<FPMovementController>();
+            playerController.Die();
         }
     }
 }

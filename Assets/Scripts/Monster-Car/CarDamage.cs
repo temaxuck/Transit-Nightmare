@@ -5,44 +5,66 @@ using UnityEngine;
 public class CarDamage : MonoBehaviour, IDamageTaker
 {
     // Literally how many hits can car get. Might be changed to relative system in %
-    [SerializeField] private int maxHitPoints = 4; 
-    [SerializeField] private GameObject nextDamageStatePrefab; 
-    [SerializeField] private GameObject[] debreeProps; 
-    [SerializeField] private float minimumSpeedCollision = 3f;
+    [SerializeField]
+    private int maxHitPoints = 4;
+
+    [SerializeField]
+    private GameObject nextDamageStatePrefab;
+
+    [SerializeField]
+    private GameObject[] debreeProps;
+
+    [SerializeField]
+    private float minimumSpeedCollision = 3f;
 
     private static int currentHitPoints;
     private static bool isInitialized = false;
     private CarController carController;
-    
-    private void Awake() {
-        if (!isInitialized) {
+
+    private void Awake()
+    {
+        if (!isInitialized)
+        {
             currentHitPoints = maxHitPoints;
             isInitialized = true;
         }
     }
 
-    private void Start() {
+    private void Start()
+    {
         carController = GetComponent<CarController>();
     }
 
-    private void Update() {
-        if (currentHitPoints < 1) 
+    private void Update()
+    {
+        if (currentHitPoints < 1)
             Destroy(gameObject);
     }
 
-
-    private void OnCollisionEnter(Collision collision) {
+    private void OnCollisionEnter(Collision collision)
+    {
         GameObject collisionObject = collision.gameObject;
         IDamageTaker collisionDamageTaker = collisionObject.GetComponent<IDamageTaker>();
 
-        if (collisionDamageTaker != null && carController.GetCurrentSpeed() >= minimumSpeedCollision)
+        if (
+            collisionDamageTaker != null && carController.GetCurrentSpeed() >= minimumSpeedCollision
+        )
         {
             if (collisionDamageTaker.isActive())
             {
                 TakeDamage();
                 collisionDamageTaker.TakeDamage();
             }
+        }
 
+        if (
+            collisionObject.CompareTag("Player")
+            && carController.GetCurrentSpeed() >= minimumSpeedCollision
+        )
+        {
+            FPMovementController playerController =
+                collisionObject.GetComponent<FPMovementController>();
+            playerController.Die();
         }
     }
 
@@ -81,11 +103,19 @@ public class CarDamage : MonoBehaviour, IDamageTaker
     {
         Vector3 carPosition = transform.position;
         Quaternion carRotation = transform.rotation;
-        
+
         foreach (GameObject debreeProp in debreeProps)
         {
-            Vector3 randomPosition = new Vector3 (Random.Range(-10.0f, 10.0f), 2f, Random.Range(-10.0f, 10.0f));
-            GameObject debreeItem = Instantiate(debreeProp, carPosition + randomPosition, carRotation);
+            Vector3 randomPosition = new Vector3(
+                Random.Range(-10.0f, 10.0f),
+                2f,
+                Random.Range(-10.0f, 10.0f)
+            );
+            GameObject debreeItem = Instantiate(
+                debreeProp,
+                carPosition + randomPosition,
+                carRotation
+            );
         }
     }
 
