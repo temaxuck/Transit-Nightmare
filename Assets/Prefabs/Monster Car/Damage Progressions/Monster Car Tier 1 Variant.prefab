@@ -775,7 +775,7 @@ Transform:
   - {fileID: 3112663117455947685}
   - {fileID: 6141629818523499988}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &7481647867008973540
 Rigidbody:
@@ -843,7 +843,7 @@ MonoBehaviour:
   obstaclesDetectionDistance: 1
   obstaclesMask:
     serializedVersion: 2
-    m_Bits: 4087
+    m_Bits: 4294967295
   maxMotorForce: 8000
   brakeForce: 2000
   maxSteerAngle: 60
@@ -1739,7 +1739,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7c3ee8e463182414aae1058129489894, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.125
   m_Pitch: 1.65
   Loop: 1
   Mute: 0

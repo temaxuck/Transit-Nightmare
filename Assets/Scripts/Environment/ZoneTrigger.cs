@@ -4,14 +4,29 @@ using UnityEngine;
 
 public class ZoneTrigger : MonoBehaviour
 {
-    [SerializeField] private GameObject pictureOrModel; // Drag and drop your 3D model or Picture(prefab with sprite renderer) in the inspector.
-    [SerializeField] private AudioClip soundClip; // Drag and drop your sound clip in the inspector.
-    [SerializeField] private Light[] roomLight;
-    [SerializeField] private float modelDistanceBehindPlayer = 10.0f;
-    [SerializeField] private float delayOfDisappearance = 2.0f;
-    [SerializeField] private float displayDuration = 15f; // duration that the picture or 3d model is visible, change according to your needs.
-    [SerializeField] private float blinkDuration = 0.25f;
-    [SerializeField] private int numBlinks = 3;
+    [SerializeField]
+    private GameObject pictureOrModel; // Drag and drop your 3D model or Picture(prefab with sprite renderer) in the inspector.
+
+    [SerializeField]
+    private AudioClip soundClip; // Drag and drop your sound clip in the inspector.
+
+    [SerializeField]
+    private Light[] roomLight;
+
+    [SerializeField]
+    private float modelDistanceBehindPlayer = 10.0f;
+
+    [SerializeField]
+    private float delayOfDisappearance = 2.0f;
+
+    [SerializeField]
+    private float displayDuration = 15f; // duration that the picture or 3d model is visible, change according to your needs.
+
+    [SerializeField]
+    private float blinkDuration = 0.25f;
+
+    [SerializeField]
+    private int numBlinks = 3;
 
     private AudioSource audioSource;
     private bool isTriggered;
@@ -37,7 +52,6 @@ public class ZoneTrigger : MonoBehaviour
                 StopCoroutine(DisplayModelRoutine());
                 StartCoroutine(PlayerSawDelayRoutine());
             }
-            
         }
     }
 
@@ -46,12 +60,15 @@ public class ZoneTrigger : MonoBehaviour
         if (!isTriggered && other.CompareTag("Player"))
         {
             playerTransform = other.transform;
-            Vector3 modelPosition = playerTransform.position - playerTransform.forward * modelDistanceBehindPlayer;
+            Vector3 modelPosition =
+                playerTransform.position - playerTransform.forward * modelDistanceBehindPlayer;
             pictureOrModel.transform.position = modelPosition;
-            foreach (var light in roomLight)
-            {
-                light.enabled = false;
-            }
+            if (roomLight != null)
+                foreach (var light in roomLight)
+                {
+                    if (light != null)
+                        light.enabled = false;
+                }
             pictureOrModel.SetActive(true); // Make the picture or model visible.
             audioSource.Play(); // Play the sound.
             StartCoroutine(DisplayModelRoutine());
@@ -62,7 +79,9 @@ public class ZoneTrigger : MonoBehaviour
 
     private bool CheckModelInSight()
     {
-        Vector3 viewDirection = (pictureOrModel.transform.position - playerTransform.position).normalized;
+        Vector3 viewDirection = (
+            pictureOrModel.transform.position - playerTransform.position
+        ).normalized;
         float dotProduct = Vector3.Dot(playerTransform.forward, viewDirection);
 
         // Change this value to set the angle the player has to look at the model for it to disappear
@@ -77,7 +96,6 @@ public class ZoneTrigger : MonoBehaviour
 
         pictureOrModel.SetActive(false); // Hide the picture or model after the desired time has passed.
         StartCoroutine(BlinkAndEnableLight());
-        
     }
 
     private IEnumerator PlayerSawDelayRoutine()

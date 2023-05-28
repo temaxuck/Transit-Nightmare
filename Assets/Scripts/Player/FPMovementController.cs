@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody))]
 public class FPMovementController : MonoBehaviour
@@ -271,4 +272,8 @@ public class FPMovementController : MonoBehaviour
     }
 
     #endregion
+
+    public void Die() {
+        SceneManager.LoadScene((int) Scenes.DiedMenu);
+    }
 }
