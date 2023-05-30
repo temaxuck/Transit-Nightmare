@@ -847,7 +847,7 @@ MonoBehaviour:
   maxMotorForce: 8000
   brakeForce: 2000
   maxSteerAngle: 60
-  maxSpeed: 500
+  maxSpeed: 120
   showGizmos: 0
 --- !u!114 &4903096415802909263
 MonoBehaviour:
@@ -1747,7 +1747,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 0.66
-  MinDistance: 1
+  MinDistance: 16.730858
   MaxDistance: 50
   Pan2D: 0
   rolloffMode: 2

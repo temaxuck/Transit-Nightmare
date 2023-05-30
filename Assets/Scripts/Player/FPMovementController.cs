@@ -276,4 +276,8 @@ public class FPMovementController : MonoBehaviour
     public void Die() {
         SceneManager.LoadScene((int) Scenes.DiedMenu);
     }
+
+    public void FinishDemo() {
+        SceneManager.LoadScene((int) Scenes.FinalMenu);
+    }
 }

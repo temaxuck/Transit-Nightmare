@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Monster Car Tier 5 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2136740840462127288, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
+      propertyPath: m_TagString
+      value: Monster Car
+      objectReference: {fileID: 0}
     - target: {fileID: 3260195932206828364, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_RootOrder
       value: 7

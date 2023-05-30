@@ -85,7 +85,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 0.66
-  MinDistance: 1
+  MinDistance: 14.712261
   MaxDistance: 50
   Pan2D: 0
   rolloffMode: 2
@@ -779,6 +779,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 811486684496256529, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
+      propertyPath: maxSpeed
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 811486684496256529, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 8043122693285867340}
+    - target: {fileID: 811486684496256529, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
+      propertyPath: maxMotorForce
+      value: 7500
+      objectReference: {fileID: 0}
+    - target: {fileID: 811486684496256529, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: obstaclesMask.m_Bits
       value: 4294967295
       objectReference: {fileID: 0}
@@ -805,6 +817,10 @@ PrefabInstance:
     - target: {fileID: 2136740840462127288, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_Name
       value: Monster Car Tier 2 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2136740840462127288, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
+      propertyPath: m_TagString
+      value: Monster Car
       objectReference: {fileID: 0}
     - target: {fileID: 2641505038889195372, guid: 698365aee9cba0a4488066e8e2da0dc3, type: 3}
       propertyPath: m_LocalPosition.y

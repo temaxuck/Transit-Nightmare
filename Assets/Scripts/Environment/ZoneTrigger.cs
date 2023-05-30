@@ -62,6 +62,7 @@ public class ZoneTrigger : MonoBehaviour
             playerTransform = other.transform;
             Vector3 modelPosition =
                 playerTransform.position - playerTransform.forward * modelDistanceBehindPlayer;
+            modelPosition.y = playerTransform.position.y - playerTransform.localScale.y / 2f;
             pictureOrModel.transform.position = modelPosition;
             if (roomLight != null)
                 foreach (var light in roomLight)

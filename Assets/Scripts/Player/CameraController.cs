@@ -15,7 +15,6 @@ public class CameraController : MonoBehaviour
     public float Ysensitivity;
     private Camera cam;
     private float rotAroundX, rotAroundY;
-    private bool camMoved = false;
 
     // Use this for initialization
     void Start()

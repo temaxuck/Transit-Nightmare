@@ -5,8 +5,7 @@ using UnityEngine;
 public class CarDamage : MonoBehaviour, IDamageTaker
 {
     // Literally how many hits can car get. Might be changed to relative system in %
-    [SerializeField]
-    private int maxHitPoints = 4;
+    public int maxHitPoints = 4;
 
     [SerializeField]
     private GameObject nextDamageStatePrefab;
@@ -21,6 +20,10 @@ public class CarDamage : MonoBehaviour, IDamageTaker
     private static bool isInitialized = false;
     private CarController carController;
 
+    #region Script variables
+        public bool isFinal; 
+    #endregion
+
     private void Awake()
     {
         if (!isInitialized)
@@ -33,12 +36,13 @@ public class CarDamage : MonoBehaviour, IDamageTaker
     private void Start()
     {
         carController = GetComponent<CarController>();
+        currentHitPoints = maxHitPoints;
     }
 
     private void Update()
     {
-        if (currentHitPoints < 1)
-            Destroy(gameObject);
+        // if (currentHitPoints < 1)
+        //     Destroy(gameObject);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -64,7 +68,10 @@ public class CarDamage : MonoBehaviour, IDamageTaker
         {
             FPMovementController playerController =
                 collisionObject.GetComponent<FPMovementController>();
-            playerController.Die();
+            if (isFinal)
+                playerController.FinishDemo();
+            else 
+                playerController.Die();
         }
     }
 
@@ -117,6 +124,16 @@ public class CarDamage : MonoBehaviour, IDamageTaker
                 carRotation
             );
         }
+    }
+
+    public int GetCurrentHitPoints()
+    {
+        return currentHitPoints;
+    }
+
+    public void ResetCurrentHitPoints()
+    {
+        currentHitPoints = maxHitPoints;
     }
 
     // private void OnDrawGizmosSelected() {
